@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { SendRequest } from "../../../wailsjs/go/main/App";
+import { SendRequest, CreateCollection } from "../../../wailsjs/go/main/App";
 import { cn } from "../../utils/tailwind.utils";
 import { main } from "../../../wailsjs/go/models";
 
@@ -57,6 +57,9 @@ export default function HttpRequest() {
     hr.method = form.method.value;
     console.log("Sending request to backend: ", hr);
     const resp = await SendRequest(hr);
+    let c = new main.CreateCollectionRequest();
+    c.name = form.url.value;
+    const res = await CreateCollection(c);
     setResponse(resp);
   }
 

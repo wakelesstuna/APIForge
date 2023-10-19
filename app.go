@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 // App struct
@@ -52,4 +54,70 @@ func (a *App) SendRequest(request HttpRequest) string {
 	// Log the request body
 	bodyString := string(body)
 	return fmt.Sprintf(bodyString)
+}
+
+type CreateCollectionRequest struct {
+	Name string `json:"name"`
+}
+
+func (a *App) CreateCollection(request CreateCollectionRequest) string {
+	createFolders(request.Name)
+	writeFile(request, request.Name, request.Name)
+	return ""
+}
+
+func createFolders(path string) {
+
+	exists, err := folderExists(path)
+	if err != nil {
+		fmt.Println("Error checking folder existence:", err)
+		return
+	}
+
+	if exists {
+		return
+	} else {
+		err := os.Mkdir(path, 0755)
+		if err != nil {
+			fmt.Println("Error creating folder:", err)
+			return
+		}
+	}
+
+}
+
+func folderExists(folderPath string) (bool, error) {
+	_, err := os.Stat(folderPath)
+
+	if os.IsNotExist(err) {
+		return false, nil
+	} else if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func writeFile(value CreateCollectionRequest, name string, folderPath string) {
+	data, err := json.MarshalIndent(value, "", "")
+
+	if err != nil {
+		fmt.Println("Error marshilling JSON:", err)
+		return
+	}
+
+	file, err := os.Create(folderPath + "/" + name + ".json")
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+
+	defer file.Close()
+
+	_, err = file.Write(data)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return
+	}
+	return
 }
