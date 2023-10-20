@@ -1,4 +1,4 @@
-module changeme
+module github.com/wakelesstuna
 
 go 1.18
 

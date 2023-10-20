@@ -57,9 +57,6 @@ export default function HttpRequest() {
     hr.method = form.method.value;
     console.log("Sending request to backend: ", hr);
     const resp = await SendRequest(hr);
-    let c = new main.CreateCollectionRequest();
-    c.name = form.url.value;
-    const res = await CreateCollection(c);
     setResponse(resp);
   }
 

@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
-	"os"
+
+	"github.com/wakelesstuna/backend"
 )
 
 // App struct
@@ -26,16 +26,6 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
-type HttpRequest struct {
-	Url    string `json:"url"`
-	Method string `json:"method"`
-}
-
 func (a *App) SendRequest(request HttpRequest) string {
 	fmt.Printf("Sending request to %s\n", request.Url)
 	resp, err := http.Get(request.Url)
@@ -46,7 +36,7 @@ func (a *App) SendRequest(request HttpRequest) string {
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("Reading body failed: %s", err)
 		return ""
@@ -56,68 +46,54 @@ func (a *App) SendRequest(request HttpRequest) string {
 	return fmt.Sprintf(bodyString)
 }
 
+type HttpRequest struct {
+	Url    string `json:"url"`
+	Method string `json:"method"`
+}
+
 type CreateCollectionRequest struct {
 	Name string `json:"name"`
 }
 
-func (a *App) CreateCollection(request CreateCollectionRequest) string {
-	createFolders(request.Name)
-	writeFile(request, request.Name, request.Name)
-	return ""
+func (a *App) CreateCollection(name string) string {
+	return backend.CreateCollection(name)
 }
 
-func createFolders(path string) {
+type FileType int
 
-	exists, err := folderExists(path)
-	if err != nil {
-		fmt.Println("Error checking folder existence:", err)
-		return
-	}
+const (
+	FOLDER FileType = iota
+	FILE
+)
 
-	if exists {
-		return
-	} else {
-		err := os.Mkdir(path, 0755)
-		if err != nil {
-			fmt.Println("Error creating folder:", err)
-			return
-		}
-	}
-
+type Collection struct {
+	Name    string  `json:"name"`
+	Folders *[]File `json:"folders"`
 }
 
-func folderExists(folderPath string) (bool, error) {
-	_, err := os.Stat(folderPath)
-
-	if os.IsNotExist(err) {
-		return false, nil
-	} else if err != nil {
-		return false, err
-	}
-
-	return true, nil
+type File struct {
+	FileType FileType `json:"fileType"`
+	Name     string   `json:"name"`
+	Data     *Request `json:"request"`
+	Files    *[]File  `json:"files"`
 }
 
-func writeFile(value CreateCollectionRequest, name string, folderPath string) {
-	data, err := json.MarshalIndent(value, "", "")
+type Request struct {
+	Url     string    `json:"url"`
+	Method  string    `json:"method"`
+	Params  *[]Param  `json:"params"`
+	Headers *[]Header `json:"headers"`
+	Body    *string   `json:"body"`
+}
 
-	if err != nil {
-		fmt.Println("Error marshilling JSON:", err)
-		return
-	}
+type Param struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+	InUse bool   `json:"inUse"`
+}
 
-	file, err := os.Create(folderPath + "/" + name + ".json")
-	if err != nil {
-		fmt.Println("Error creating file:", err)
-		return
-	}
-
-	defer file.Close()
-
-	_, err = file.Write(data)
-	if err != nil {
-		fmt.Println("Error writing to file:", err)
-		return
-	}
-	return
+type Header struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+	InUse bool   `json:"inUse"`
 }
