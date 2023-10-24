@@ -3,6 +3,7 @@ package backend
 import (
 	"encoding/json"
 	"os"
+	"strings"
 
 	"github.com/wakelesstuna/backend/config"
 	"github.com/wakelesstuna/backend/utils"
@@ -105,9 +106,20 @@ func CreateCollectionSubFolder(request CreateCollectionSubFolderRequest) {
 	}
 }
 
-/* func CreateRequest(request CreateRequestRequest) {
+func CreateHttpRequest(name string, collectionName string, httpRequest HttpRequest) {
 	config := config.FetchConfig()
+	// find check if the collection name existis in config
+	// create a httpRequest
+}
 
-	utils.FolderExists()
+func UpdateCollection(name string, updatedCollection Collection) {
+	config := config.FetchConfig()
+	var collection Collection
+	for _, x := range config.CollectionUrls {
+		if strings.Contains(x, name) {
+			data := utils.ReadFile(x)
+			json.Unmarshal(data, &collection)
+		}
+	}
 
-} */
+}
