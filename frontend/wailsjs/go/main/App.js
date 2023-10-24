@@ -6,8 +6,16 @@ export function CreateCollection(arg1) {
   return window['go']['main']['App']['CreateCollection'](arg1);
 }
 
-export function Greet(arg1) {
-  return window['go']['main']['App']['Greet'](arg1);
+export function FetchCollections() {
+  return window['go']['main']['App']['FetchCollections']();
+}
+
+export function FetchConfig() {
+  return window['go']['main']['App']['FetchConfig']();
+}
+
+export function SelectFolder() {
+  return window['go']['main']['App']['SelectFolder']();
 }
 
 export function SendRequest(arg1) {

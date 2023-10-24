@@ -1,10 +1,10 @@
 package backend
 
 import (
-	"fmt"
+	"encoding/json"
 	"os"
-	"os/user"
 
+	"github.com/wakelesstuna/backend/config"
 	"github.com/wakelesstuna/backend/utils"
 )
 
@@ -47,19 +47,38 @@ type Header struct {
 	InUse bool   `json:"inUse"`
 }
 
-func getHomeDir() string {
-	currentUser, err := user.Current()
-	if err != nil {
-		fmt.Println("Error:", err)
-		return ""
-	}
-	homeDir := currentUser.HomeDir
-	fmt.Printf("User's home directory: %s\n", homeDir)
-	return homeDir
+type CreateCollectionRequest struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
 }
 
-func CreateCollection(name string) string {
-	collectionPath := "collections/" + name
+type CreateCollectionSubFolderRequest struct {
+	CollectionName string `json:"collectionName"`
+	Path           string `json:"path"`
+	Name           string `json:"name"`
+}
+
+type CreateRequestRequest struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
+}
+
+func FetchCollections() []Collection {
+	config := config.FetchConfig()
+	collections := make([]Collection, 1)
+
+	for _, x := range config.CollectionUrls {
+		var collection Collection
+		data := utils.ReadFile(x)
+		json.Unmarshal(data, &collection)
+		collections = append(collections, collection)
+	}
+
+	return collections
+}
+
+func CreateCollection(request CreateCollectionRequest) string {
+	collectionPath := request.Path + "/" + request.Name
 
 	if utils.FolderExists(collectionPath) {
 		return "Folder already exists."
@@ -69,6 +88,26 @@ func CreateCollection(name string) string {
 		println("Error:", err)
 		return err.Error()
 	}
+
+	config.AddCollectionDir(collectionPath)
 	println("Directory created successfully.")
 	return "Directory created successfully."
 }
+
+func CreateCollectionSubFolder(request CreateCollectionSubFolderRequest) {
+	config := config.FetchConfig()
+
+	for _, x := range config.CollectionUrls {
+		var collection Collection
+		data := utils.ReadFile(x)
+		json.Unmarshal(data, &collection)
+
+	}
+}
+
+/* func CreateRequest(request CreateRequestRequest) {
+	config := config.FetchConfig()
+
+	utils.FolderExists()
+
+} */

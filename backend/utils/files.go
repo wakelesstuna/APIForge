@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 func CreateFolders(path string) {
@@ -54,4 +57,56 @@ func WriteFile(value string, name string, folderPath string) {
 		return
 	}
 	return
+}
+
+func PrintFile[T any](input T, filePath string) {
+	data, err := json.MarshalIndent(input, "", "")
+
+	if err != nil {
+		fmt.Println("Error marshilling JSON:", err)
+		return
+	}
+
+	file, err := os.Create(filePath)
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+
+	defer file.Close()
+
+	_, err = file.Write(data)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return
+	}
+	return
+}
+
+func ReadFile(path string) []byte {
+	file, err := os.ReadFile(path)
+	CheckAndlogError(err)
+	return file
+}
+
+func CheckAndlogError(e error) {
+	if e != nil {
+		fmt.Println("Error: ", e)
+		panic(e)
+	}
+}
+
+func OpenFolderChooser(ctx context.Context, options runtime.OpenDialogOptions) string {
+	folder, err := runtime.OpenDirectoryDialog(ctx, options)
+
+	if err != nil {
+		fmt.Printf("Error selecting folder: %v", err)
+		return ""
+	}
+
+	return folder
+}
+
+func FindFolder() {
+
 }

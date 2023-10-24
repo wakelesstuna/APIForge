@@ -16,7 +16,9 @@ type Props = {
   title: string;
   isOpened: boolean;
   onProceed: () => void;
+  onProceedButtonText?: string;
   onClose: () => void;
+  onCloseButtonText?: string;
   className?: string;
   children: React.ReactNode;
 };
@@ -25,7 +27,9 @@ const DialogModal = ({
   title,
   isOpened,
   onProceed,
+  onProceedButtonText = "Procced",
   onClose,
+  onCloseButtonText = "Close",
   className,
   children,
 }: Props) => {
@@ -66,16 +70,16 @@ const DialogModal = ({
 
       <div className="flex gap-5 py-4 justify-end pr-6">
         <button
-          className="bg-green-500 px-4 py-2 rounded-md"
-          onClick={proceedAndClose}
-        >
-          Create
-        </button>
-        <button
-          className="px-4 py-2 rounded-md border border-gray-300"
+          className="px-4 py-2 rounded-md border border-transparent hover:border-gray-300"
           onClick={onClose}
         >
-          Close
+          {onCloseButtonText}
+        </button>
+        <button
+          className="bg-green-700 px-4 py-2 rounded-md border border-transparent hover:border-gray-300"
+          onClick={proceedAndClose}
+        >
+          {onProceedButtonText}
         </button>
       </div>
     </dialog>

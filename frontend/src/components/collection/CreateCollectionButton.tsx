@@ -1,16 +1,21 @@
-import React, { useState } from "react";
-import { CreateCollection } from "../../../wailsjs/go/main/App";
+import { useState } from "react";
 import Modal from "../modal/Modal";
 import InputField from "../ui/InputField";
+import InputLocation from "../ui/InputLocation";
+import { backend } from "../../../wailsjs/go/models";
+import { CreateCollection } from "../../../wailsjs/go/main/App";
 
 function CreateCollectionButton() {
   const [isOpened, setIsOpened] = useState(false);
   const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
 
   const onProceed = async () => {
     console.log("Creating collection named: " + name);
-    let resp = await CreateCollection(name);
-    alert(resp);
+    let request = new backend.CreateCollectionRequest();
+    request.name = name;
+    request.path = location;
+    let resp = await CreateCollection(request);
     setName("");
   };
 
@@ -27,7 +32,9 @@ function CreateCollectionButton() {
         title="Create new Collection"
         isOpened={isOpened}
         onProceed={onProceed}
+        onProceedButtonText="Create"
         onClose={() => setIsOpened(false)}
+        onCloseButtonText="Cancel"
       >
         <form
           className="px-6 py-4"
@@ -38,6 +45,11 @@ function CreateCollectionButton() {
           }}
         >
           <InputField name="Name" value={name} setValue={setName} />
+          <InputLocation
+            name="Location"
+            value={location}
+            setValue={setLocation}
+          />
         </form>
       </Modal>
     </>

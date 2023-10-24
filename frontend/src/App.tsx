@@ -1,10 +1,14 @@
 import CreateCollectionButton from "./components/collection/CreateCollectionButton";
 import HttpRequest from "./components/http-request/HttpRequest";
+import TopMenu from "./components/menu/TopMenu";
+import useConfig from "./hooks/useConfig";
 
 function App() {
+  const config = useConfig();
+
   return (
     <div className="bg-gray-800">
-      <p className="">Logo Goes Here</p>
+      <TopMenu />
       <HttpRequest />
       <CreateCollectionButton />
     </div>
