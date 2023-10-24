@@ -109,7 +109,8 @@ func CreateCollectionSubFolder(request CreateCollectionSubFolderRequest) {
 func CreateHttpRequest(name string, collectionName string, httpRequest HttpRequest) {
 	config := config.FetchConfig()
 	// find check if the collection name existis in config
-	// create a httpRequest
+	// write httpRequest to file and save with name as filename
+	// trigger
 }
 
 func UpdateCollection(name string, updatedCollection Collection) {
