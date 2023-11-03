@@ -6,12 +6,32 @@ export function CreateCollection(arg1) {
   return window['go']['main']['App']['CreateCollection'](arg1);
 }
 
+export function CreateCollection2(arg1) {
+  return window['go']['main']['App']['CreateCollection2'](arg1);
+}
+
+export function CreateNewFolder(arg1, arg2) {
+  return window['go']['main']['App']['CreateNewFolder'](arg1, arg2);
+}
+
 export function FetchCollections() {
   return window['go']['main']['App']['FetchCollections']();
 }
 
 export function FetchConfig() {
   return window['go']['main']['App']['FetchConfig']();
+}
+
+export function GetCollection(arg1) {
+  return window['go']['main']['App']['GetCollection'](arg1);
+}
+
+export function GetCollections(arg1) {
+  return window['go']['main']['App']['GetCollections'](arg1);
+}
+
+export function RenameCollection(arg1, arg2) {
+  return window['go']['main']['App']['RenameCollection'](arg1, arg2);
 }
 
 export function SelectFolder() {

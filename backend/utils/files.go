@@ -9,6 +9,10 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
+func CreateDirectory(dir string) {
+
+}
+
 func CreateFolders(path string) {
 	exists := FolderExists(path)
 
@@ -24,14 +28,9 @@ func CreateFolders(path string) {
 }
 
 func FolderExists(folderPath string) bool {
-	_, err := os.Stat(folderPath)
-
-	if os.IsNotExist(err) {
-		return false
-	} else if err != nil {
+	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
 		return false
 	}
-
 	return true
 }
 

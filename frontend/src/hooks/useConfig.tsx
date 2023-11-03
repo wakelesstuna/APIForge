@@ -14,7 +14,7 @@ function useConfig() {
     void loadCofigFile();
   }, []);
 
-  return config;
+  return { config };
 }
 
 export default useConfig;

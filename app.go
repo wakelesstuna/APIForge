@@ -5,6 +5,7 @@ import (
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"github.com/wakelesstuna/backend"
+	"github.com/wakelesstuna/backend/collections"
 	"github.com/wakelesstuna/backend/config"
 	"github.com/wakelesstuna/backend/utils"
 )
@@ -44,4 +45,24 @@ func (a *App) FetchCollections() []backend.Collection {
 
 func (a *App) CreateCollection(request backend.CreateCollectionRequest) string {
 	return backend.CreateCollection(request)
+}
+
+func (a *App) CreateCollection2(request backend.CreateCollectionRequest) {
+	collections.CreateCollection(request.Name, request.Path)
+}
+
+func (a *App) RenameCollection(newName string, folderPath string) {
+	collections.RenameCollection(newName, folderPath)
+}
+
+func (a *App) CreateNewFolder(folderName string, folderPath string) {
+	collections.NewFolder(folderName, folderPath)
+}
+
+func (a *App) GetCollection(path string) collections.Collection {
+	return collections.GetCollection(path)
+}
+
+func (a *App) GetCollections(dirPath string) []collections.Collection {
+	return collections.GetCollections(dirPath)
 }

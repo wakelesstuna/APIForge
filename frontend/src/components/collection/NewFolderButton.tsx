@@ -1,35 +1,30 @@
 import { useState } from "react";
 import DialogModal from "../modal/Modal";
 import InputField from "../ui/InputField";
-import InputLocation from "../ui/InputLocation";
-import { backend } from "../../../wailsjs/go/models";
-import { CreateCollection2 } from "../../../wailsjs/go/main/App";
+import { CreateNewFolder } from "../../../wailsjs/go/main/App";
 
-function CreateCollectionButton() {
+interface Props {
+  folderPath: string;
+}
+
+function NewFolderButton({ folderPath }: Props) {
   const [isOpened, setIsOpened] = useState(false);
   const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
 
   const onProceed = async () => {
     console.log("Creating collection named: " + name);
-    let request = new backend.CreateCollectionRequest();
-    request.name = name;
-    request.path = location;
-    let resp = await CreateCollection2(request);
+    let resp = await CreateNewFolder(name, folderPath);
     setName("");
   };
 
   return (
     <>
-      <button
-        className="p-2 text-white border border-white rounded-md hover:text-opacity-80"
-        onClick={() => setIsOpened(true)}
-      >
-        Create New Collection
+      <button className="" onClick={() => setIsOpened(true)}>
+        New folder
       </button>
 
       <DialogModal
-        title="Create new Collection"
+        title="Add new folder"
         isOpened={isOpened}
         onProceed={onProceed}
         onProceedButtonText="Create"
@@ -45,15 +40,10 @@ function CreateCollectionButton() {
           }}
         >
           <InputField name="Name" value={name} setValue={setName} />
-          <InputLocation
-            name="Location"
-            value={location}
-            setValue={setLocation}
-          />
         </form>
       </DialogModal>
     </>
   );
 }
 
-export default CreateCollectionButton;
+export default NewFolderButton;

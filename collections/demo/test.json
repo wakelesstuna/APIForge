@@ -1,0 +1,48 @@
+{
+  "id": "1234asqd",
+  "name": "Test collection",
+  "items": [
+    {
+      "id": "sdfgsa2134",
+      "name": "sub folder",
+      "type": "folder",
+      "request": null
+    },
+    {
+      "id": "sdfgssdafasfdga2134",
+      "name": "get users",
+      "type": "http-request",
+      "request": {
+        "url": "http://localhost:8080/v1/users",
+        "method": "GET",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "params": {
+          "email": "oscar"
+        },
+        "body": null
+      }
+    },
+    {
+      "id": "sdfgsa2134",
+      "name": "create user",
+      "type": "http-request",
+      "request": {
+        "url": "http://localhost:8080/v1/users",
+        "method": "POST",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "params": null,
+        "body": {
+          "json": {
+            "username": "oscar",
+            "password": "test1234",
+            "email": "oscar@email.com"
+          }
+        }
+      }
+    }
+  ]
+}
