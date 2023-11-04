@@ -1,22 +1,21 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import NewFolderButton from "./NewFolderButton";
-import RenameCollectionButton from "./RenameCollectionButton";
-import RemoveButton from "./RemoveButton";
 import { collections } from "../../../wailsjs/go/models";
+import CollectionDeleteButton from "./CollectionDeleteButton";
+import RenameCollectionButton from "./RenameCollectionButton";
+import CollectionRenameButton from "./CollectionRenameButton";
 
-interface Props {
-  collection: collections.Collection | collections.Item;
-  currentFolderName: string;
+interface CollectionFolderMenuProps {
+  collection: collections.Collection;
 }
 
-function FolderMenuButton({ collection, currentFolderName }: Props) {
+function CollectionFolderMenu({ collection }: CollectionFolderMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleMouseLeave = () => {
     setIsOpen(false);
   };
-
   return (
     <div className="relative flex">
       <button
@@ -39,13 +38,10 @@ function FolderMenuButton({ collection, currentFolderName }: Props) {
               <NewFolderButton folderPath="" />
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
-              <RenameCollectionButton
-                collection={collection as collections.Collection}
-                currentFolderName={currentFolderName}
-              />
+              <CollectionRenameButton collection={collection} />
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
-              <RemoveButton collection={collection} />
+              <CollectionDeleteButton collection={collection} />
             </li>
           </ul>
         </div>
@@ -54,4 +50,4 @@ function FolderMenuButton({ collection, currentFolderName }: Props) {
   );
 }
 
-export default FolderMenuButton;
+export default CollectionFolderMenu;

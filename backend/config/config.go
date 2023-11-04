@@ -33,9 +33,37 @@ func FetchConfig() Config {
 	return cfg
 }
 
-func AddCollectionDir(path string) {
+func AddCollection(id string, name string, dirPath string) {
+	collection := Collection{Id: id, Name: name, DirPath: dirPath}
 	cfg := FetchConfig()
-	cfg.CollectionUrls = append(cfg.CollectionUrls, path)
+	cfg.Collections = append(cfg.Collections, collection)
+	saveConfig(cfg)
+}
+
+func DeleteCollection(id string) {
+	cfg := FetchConfig()
+	var updatedItems []Collection
+
+	for _, item := range cfg.Collections {
+		if item.Id != id {
+			updatedItems = append(updatedItems, item)
+		}
+	}
+
+	cfg.Collections = updatedItems
+	saveConfig(cfg)
+}
+
+func RenameCollection(newName string, collectionId string) {
+	cfg := FetchConfig()
+
+	for i, collection := range cfg.Collections {
+		if collection.Id == collectionId {
+			cfg.Collections[i].Name = newName
+			break
+		}
+	}
+
 	saveConfig(cfg)
 }
 

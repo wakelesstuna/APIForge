@@ -6,35 +6,23 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/google/uuid"
 	"github.com/wakelesstuna/backend"
+	"github.com/wakelesstuna/backend/config"
 	"github.com/wakelesstuna/backend/utils"
 )
 
-func GetCollections(dirPath string) []Collection {
+func GetCollections() []Collection {
 	var collections []Collection
-	dir, err := os.Open(dirPath)
-	if err != nil {
-		fmt.Println("Error opening directory:", err)
-		return nil
-	}
-	defer dir.Close()
 
-	// Read the directory entries
-	entries, err := dir.Readdir(-1)
-	if err != nil {
-		fmt.Println("Error reading directory:", err)
-		return nil
+	cfg := config.FetchConfig()
+
+	for _, collection := range cfg.Collections {
+		dir1 := filepath.Join(collection.DirPath, collection.Name+".json")
+		fmt.Println(dir1)
+		collections = append(collections, GetCollection(dir1))
 	}
 
-	// Iterate through the entries and print the filenames
-	for _, entry := range entries {
-		if entry.IsDir() {
-			// If you want to skip directories, you can add a check here.
-			continue
-		}
-		fmt.Println(entry.Name())
-		collections = append(collections, GetCollection(filepath.Join(dirPath, entry.Name())))
-	}
 	return collections
 }
 
@@ -46,34 +34,46 @@ func GetCollection(path string) Collection {
 	return collection
 }
 
-func CreateCollection(collectionFolderName string, collectionlocation string) backend.AppResponse[any] {
-	dirPath := filepath.Join(collectionlocation, collectionFolderName)
+func CreateCollection(collectionFolderName string, collectionlocation string) backend.AppResponse {
+	var resp backend.AppResponse
+	var collection Collection
 
-	var resp backend.AppResponse[any]
-	if utils.FolderExists(dirPath) {
-		resp.Status = 500
-		resp.Error = backend.Error{Status: 500, Message: "collection: " + dirPath + " already exists"}
-		return resp
-	}
+	collection.Id = uuid.NewString()
+	collection.Name = collectionFolderName
+	collection.CollectionDir = collectionlocation
+	collection.Type = COLLECTION
 
-	if err := os.Mkdir(dirPath, 0755); err != nil {
-		resp.Status = 500
-		resp.Error = backend.Error{Status: 500, Message: "Could not create dir"}
-		return resp
-	}
-
+	utils.WriteFile(collection, collectionFolderName, collectionlocation)
+	config.AddCollection(collection.Id, collection.Name, collection.CollectionDir)
 	resp.Status = 200
 	return resp
 }
 
-func RenameCollection(newname string, collectionPath string) {
-	println(collectionPath)
-	newPath := filepath.Join(filepath.Dir(collectionPath), newname)
-	println(newPath)
-	if err := os.Rename(collectionPath, newPath); err != nil {
-		fmt.Println("Error!")
-		fmt.Println(err)
+func RenameCollection(newName string, collectionId string) backend.AppResponse {
+	var resp backend.AppResponse
+	cfg := config.FetchConfig()
+
+	collection := findCollectionById(cfg.Collections, collectionId)
+	fmt.Println(collection)
+
+	oldAbsolutePath := filepath.Join(collection.DirPath, collection.Name+".json")
+	newAbsolutePath := filepath.Join(collection.DirPath, newName+".json")
+	fmt.Println("oldPath " + oldAbsolutePath)
+	fmt.Println("newPath " + newAbsolutePath)
+
+	if err := os.Rename(oldAbsolutePath, newAbsolutePath); err != nil {
+		resp.Status = 500
+		resp.Error.Status = 500
+		resp.Error.Message = err.Error()
+		return resp
 	}
+
+	collection.Name = newName
+	utils.WriteFile(collection, collection.Name, collection.DirPath)
+
+	config.RenameCollection(newName, collectionId)
+	resp.Status = 200
+	return resp
 }
 
 func NewFolder(folderName string, folderPath string) {
@@ -87,4 +87,39 @@ func NewFolder(folderName string, folderPath string) {
 	if err := os.Mkdir(newFolder, 0755); err != nil {
 		panic(err)
 	}
+}
+
+func DeleteCollection(collectionId string) backend.AppResponse {
+	var resp backend.AppResponse
+	cfg := config.FetchConfig()
+
+	for _, collection := range cfg.Collections {
+		if collection.Id == collectionId {
+			err := os.Remove(filepath.Join(collection.DirPath, collection.Name+".json"))
+			if err != nil {
+				resp.Status = 500
+				resp.Error.Status = 500
+				resp.Error.Message = err.Error()
+				return resp
+			}
+			config.DeleteCollection(collection.Id)
+			resp.Status = 201
+			return resp
+		}
+	}
+	resp.Status = 404
+	return resp
+}
+
+func findCollectionById(collections []config.Collection, id string) config.Collection {
+	fmt.Println("looking for collection with id: " + id)
+	for _, collection := range collections {
+		if collection.Id == id {
+			fmt.Println("found collection with id: " + id)
+			return collection
+		}
+	}
+	fmt.Println("Did not find collection")
+	return config.Collection{}
+
 }

@@ -1,19 +1,18 @@
 import { collections } from "../../../wailsjs/go/models";
 import { RemoveCollection } from "../../../wailsjs/go/main/App";
 
-interface RemoveButtonProps {
+interface CollectionDeleteButtonProps {
   collection: collections.Collection | collections.Item;
 }
 
-function RemoveButton({ collection }: RemoveButtonProps) {
+function CollectionDeleteButton({ collection }: CollectionDeleteButtonProps) {
   const remove = async () => {
     const resp = await RemoveCollection(collection.id);
+    if (resp.status != 201) {
+      alert(resp.error.messsage);
+    }
   };
-  return (
-    <button className="" onClick={remove}>
-      Remove
-    </button>
-  );
+  return <button onClick={remove}>Remove</button>;
 }
 
-export default RemoveButton;
+export default CollectionDeleteButton;

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"github.com/wakelesstuna/backend"
 	"github.com/wakelesstuna/backend/collections"
 	"github.com/wakelesstuna/backend/config"
 	"github.com/wakelesstuna/backend/request"
@@ -39,12 +40,18 @@ func (a *App) SelectFolder() string {
 	return utils.OpenFolderChooser(a.ctx, options)
 }
 
-func (a *App) CreateCollection(name string, dirPath string) {
-	collections.CreateCollection(name, dirPath)
+func (a *App) CreateCollection(name string, dirPath string) backend.AppResponse {
+	response := collections.CreateCollection(name, dirPath)
+	runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
+	return response
 }
 
-func (a *App) RenameCollection(newName string, folderPath string) {
-	collections.RenameCollection(newName, folderPath)
+func (a *App) RenameCollection(newName string, collectionId string) backend.AppResponse {
+	response := collections.RenameCollection(newName, collectionId)
+	if response.Status == 200 {
+		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
+	}
+	return response
 }
 
 func (a *App) CreateNewFolder(folderName string, folderPath string) {
@@ -56,5 +63,13 @@ func (a *App) GetCollection(path string) collections.Collection {
 }
 
 func (a *App) GetCollections(dirPath string) []collections.Collection {
-	return collections.GetCollections(dirPath)
+	return collections.GetCollections()
+}
+
+func (a *App) RemoveCollection(collectionId string) backend.AppResponse {
+	response := collections.DeleteCollection(collectionId)
+	if response.Status == 201 {
+		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
+	}
+	return response
 }

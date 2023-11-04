@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { SendRequest } from "../../../wailsjs/go/main/App";
 import { cn } from "../../utils/tailwind.utils";
-import { backend } from "../../../wailsjs/go/models";
+import { backend, request } from "../../../wailsjs/go/models";
 import { httpMethods } from "../../utils/http.utils";
 
 export default function HttpRequest() {
@@ -30,7 +30,7 @@ export default function HttpRequest() {
   async function sendHttpRequest(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = getFormData(e);
-    let hr = new backend.HttpRequest();
+    let hr = new request.HttpRequest();
     hr.url = form.url.value;
     hr.method = form.method.value;
     console.log("Sending request to backend: ", hr);

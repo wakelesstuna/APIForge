@@ -9,10 +9,11 @@ const (
 )
 
 type Collection struct {
-	Id    string   `json:"id"`
-	Name  string   `json:"name"`
-	Type  ItemType `json:"type"`
-	Items []Item   `json:"items"`
+	Id            string   `json:"id"`
+	Name          string   `json:"name"`
+	CollectionDir string   `json:"collectionDir"`
+	Type          ItemType `json:"type"`
+	Items         []Item   `json:"items"`
 }
 
 type Item struct {

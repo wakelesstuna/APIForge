@@ -5,6 +5,9 @@ import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import useCollections from "../../hooks/useCollections";
 import { getColorOfMethod } from "../../utils/http.utils";
 import FolderMenuButton from "../collection/FolderMenuButton";
+import useConfig from "../../hooks/useConfig";
+import RequestMenuButton from "../collection/RequestMenuButton";
+import CollectionFolderMenu from "../collection/CollectionFolderMenu";
 
 interface FolderMenuProps {
   setCurrentRequest: Dispatch<SetStateAction<collections.Request | undefined>>;
@@ -51,7 +54,7 @@ const CollectionRoot = ({
           {collection.name}
         </span>
         <div className="opacity-0 hover:opacity-100 flex justify-end flex-1 items-center">
-          <FolderMenuButton currentFolderPath="" />
+          <CollectionFolderMenu collection={collection} />
         </div>
       </div>
       {expanded && (
@@ -100,7 +103,7 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
             {item.name}
           </span>
           <div className="opacity-0 hover:opacity-100 flex justify-end flex-1 items-center">
-            <FolderMenuButton currentFolderPath="" />
+            <FolderMenuButton collection={item} currentFolderName={item.name} />
           </div>
         </div>
         {expanded && (
@@ -163,7 +166,7 @@ const HttpRequest = ({ request, setCurrentRequest }: HttpRequestProps) => {
         {request.name}
       </p>
       <div className="opacity-0 peer-hover:opacity-100 hover:opacity-100 flex justify-end items-center">
-        <FolderMenuButton currentFolderPath="" />
+        <RequestMenuButton />
       </div>
     </div>
   );

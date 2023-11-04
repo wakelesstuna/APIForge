@@ -11,6 +11,9 @@ function CreateCollectionButton() {
 
   const onProceed = async () => {
     let resp = await CreateCollection(name, location);
+    if (resp.status != 200) {
+      alert(resp.error.messsage);
+    }
     setName("");
   };
 

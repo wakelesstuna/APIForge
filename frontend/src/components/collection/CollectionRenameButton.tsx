@@ -1,25 +1,22 @@
-import React, { useState } from "react";
+import { collections } from "../../../wailsjs/go/models";
+import { RenameCollection } from "../../../wailsjs/go/main/App";
 import DialogModal from "../modal/Modal";
 import InputField from "../ui/InputField";
-import { RenameCollection } from "../../../wailsjs/go/main/App";
-import { collections } from "../../../wailsjs/go/models";
+import { useState } from "react";
 
-interface Props {
+interface CollectionRenameButtonProps {
   collection: collections.Collection;
-  currentFolderName: string;
 }
 
-function RenameCollectionButton({ currentFolderName, collection }: Props) {
+function CollectionRenameButton({ collection }: CollectionRenameButtonProps) {
   const [isOpened, setIsOpened] = useState(false);
-  console.log("Rename: ", currentFolderName);
-  const [newName, setNewName] = useState(currentFolderName);
+  const [newName, setNewName] = useState(collection.name);
 
   const onProceed = async () => {
-    let resp = await RenameCollection(
-      newName,
-      "D:\\projects\\go-api-forge\\collections\\test"
-    );
-    setNewName("");
+    const resp = await RenameCollection(newName, collection.id);
+    if (resp.status != 200) {
+      alert(resp.error.messsage);
+    }
   };
 
   return (
@@ -31,7 +28,7 @@ function RenameCollectionButton({ currentFolderName, collection }: Props) {
         title="Rename Folder"
         isOpened={isOpened}
         onProceed={onProceed}
-        onProceedButtonText="Create"
+        onProceedButtonText="Rename"
         onClose={() => setIsOpened(false)}
         onCloseButtonText="Cancel"
       >
@@ -54,4 +51,4 @@ function RenameCollectionButton({ currentFolderName, collection }: Props) {
   );
 }
 
-export default RenameCollectionButton;
+export default CollectionRenameButton;

@@ -1,8 +1,8 @@
 package backend
 
-type AppResponse[T any] struct {
+type AppResponse struct {
 	Status int   `json:"status"`
-	Data   T     `json:"data"`
+	Data   any   `json:"data"`
 	Error  Error `json:"error"`
 }
 

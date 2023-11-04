@@ -22,6 +22,10 @@ export function GetCollections(arg1) {
   return window['go']['main']['App']['GetCollections'](arg1);
 }
 
+export function RemoveCollection(arg1) {
+  return window['go']['main']['App']['RemoveCollection'](arg1);
+}
+
 export function RenameCollection(arg1, arg2) {
   return window['go']['main']['App']['RenameCollection'](arg1, arg2);
 }
