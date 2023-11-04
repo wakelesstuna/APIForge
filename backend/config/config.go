@@ -9,10 +9,6 @@ import (
 	"github.com/wakelesstuna/backend/utils"
 )
 
-type Config struct {
-	CollectionUrls []string `json:"collectionUrls"`
-}
-
 var configFile = "config.json"
 
 func FetchConfig() Config {

@@ -1,4 +1,4 @@
-package backend
+package request
 
 import (
 	"fmt"
@@ -6,11 +6,6 @@ import (
 	"log"
 	"net/http"
 )
-
-type HttpRequest struct {
-	Url    string `json:"url"`
-	Method string `json:"method"`
-}
 
 func SendRequest(request HttpRequest) string {
 	fmt.Printf("Sending request to %s\n", request.Url)

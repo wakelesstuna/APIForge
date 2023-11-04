@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"github.com/wakelesstuna/backend"
 	"github.com/wakelesstuna/backend/collections"
 	"github.com/wakelesstuna/backend/config"
+	"github.com/wakelesstuna/backend/request"
 	"github.com/wakelesstuna/backend/utils"
 )
 
@@ -26,8 +26,8 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *App) SendRequest(request backend.HttpRequest) string {
-	return backend.SendRequest(request)
+func (a *App) SendRequest(input request.HttpRequest) string {
+	return request.SendRequest(input)
 }
 
 func (a *App) FetchConfig() config.Config {
@@ -39,16 +39,8 @@ func (a *App) SelectFolder() string {
 	return utils.OpenFolderChooser(a.ctx, options)
 }
 
-func (a *App) FetchCollections() []backend.Collection {
-	return backend.FetchCollections()
-}
-
-func (a *App) CreateCollection(request backend.CreateCollectionRequest) string {
-	return backend.CreateCollection(request)
-}
-
-func (a *App) CreateCollection2(request backend.CreateCollectionRequest) {
-	collections.CreateCollection(request.Name, request.Path)
+func (a *App) CreateCollection2(request collections.Collection) {
+	collections.CreateCollection(request.Name, "")
 }
 
 func (a *App) RenameCollection(newName string, folderPath string) {
