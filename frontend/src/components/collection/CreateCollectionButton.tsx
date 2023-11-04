@@ -2,8 +2,7 @@ import { useState } from "react";
 import DialogModal from "../modal/Modal";
 import InputField from "../ui/InputField";
 import InputLocation from "../ui/InputLocation";
-import { backend } from "../../../wailsjs/go/models";
-import { CreateCollection2 } from "../../../wailsjs/go/main/App";
+import { CreateCollection } from "../../../wailsjs/go/main/App";
 
 function CreateCollectionButton() {
   const [isOpened, setIsOpened] = useState(false);
@@ -11,11 +10,7 @@ function CreateCollectionButton() {
   const [location, setLocation] = useState("");
 
   const onProceed = async () => {
-    console.log("Creating collection named: " + name);
-    let request = new backend.CreateCollectionRequest();
-    request.name = name;
-    request.path = location;
-    let resp = await CreateCollection2(request);
+    let resp = await CreateCollection(name, location);
     setName("");
   };
 

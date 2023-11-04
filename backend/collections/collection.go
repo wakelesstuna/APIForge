@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/wakelesstuna/backend"
 	"github.com/wakelesstuna/backend/utils"
 )
 
@@ -45,16 +46,24 @@ func GetCollection(path string) Collection {
 	return collection
 }
 
-func CreateCollection(collectionFolderName string, collectionlocation string) {
+func CreateCollection(collectionFolderName string, collectionlocation string) backend.AppResponse[any] {
 	dirPath := filepath.Join(collectionlocation, collectionFolderName)
 
+	var resp backend.AppResponse[any]
 	if utils.FolderExists(dirPath) {
-		panic("collection: " + dirPath + " already exists")
+		resp.Status = 500
+		resp.Error = backend.Error{Status: 500, Message: "collection: " + dirPath + " already exists"}
+		return resp
 	}
 
 	if err := os.Mkdir(dirPath, 0755); err != nil {
-		panic(err)
+		resp.Status = 500
+		resp.Error = backend.Error{Status: 500, Message: "Could not create dir"}
+		return resp
 	}
+
+	resp.Status = 200
+	return resp
 }
 
 func RenameCollection(newname string, collectionPath string) {

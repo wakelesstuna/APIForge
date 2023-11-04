@@ -39,8 +39,8 @@ func (a *App) SelectFolder() string {
 	return utils.OpenFolderChooser(a.ctx, options)
 }
 
-func (a *App) CreateCollection2(request collections.Collection) {
-	collections.CreateCollection(request.Name, "")
+func (a *App) CreateCollection(name string, dirPath string) {
+	collections.CreateCollection(name, dirPath)
 }
 
 func (a *App) RenameCollection(newName string, folderPath string) {
