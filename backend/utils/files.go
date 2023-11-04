@@ -35,7 +35,7 @@ func FolderExists(folderPath string) bool {
 }
 
 func WriteFile(value any, name string, folderPath string) {
-	data, err := json.MarshalIndent(value, "", "")
+	data, err := json.MarshalIndent(value, "", "  ")
 
 	if err != nil {
 		fmt.Println("Error marshilling JSON:", err)

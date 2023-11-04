@@ -17,10 +17,12 @@ type Props = {
   isOpened: boolean;
   onProceed: () => void;
   onProceedButtonText?: string;
+  onProceedButtonType?: "warning" | "info";
   onClose: () => void;
   onCloseButtonText?: string;
   className?: string;
   children: React.ReactNode;
+  buttons?: boolean;
 };
 
 const DialogModal = ({
@@ -28,10 +30,12 @@ const DialogModal = ({
   isOpened,
   onProceed,
   onProceedButtonText = "Procced",
+  onProceedButtonType = "info",
   onClose,
   onCloseButtonText = "Close",
   className,
   children,
+  buttons = true,
 }: Props) => {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -48,6 +52,15 @@ const DialogModal = ({
   const proceedAndClose = () => {
     onProceed();
     onClose();
+  };
+
+  const getProccedButtonTypeColor = () => {
+    if (onProceedButtonType === "info") {
+      return "bg-green-700";
+    }
+    if (onProceedButtonType === "warning") {
+      return "bg-red-700";
+    }
   };
 
   return (
@@ -68,20 +81,25 @@ const DialogModal = ({
 
       {children}
 
-      <div className="flex gap-5 py-4 justify-end pr-6">
-        <button
-          className="px-4 py-2 rounded-md border border-transparent hover:border-gray-300"
-          onClick={onClose}
-        >
-          {onCloseButtonText}
-        </button>
-        <button
-          className="bg-green-700 px-4 py-2 rounded-md border border-transparent hover:border-gray-300"
-          onClick={proceedAndClose}
-        >
-          {onProceedButtonText}
-        </button>
-      </div>
+      {buttons && (
+        <div className="flex gap-5 py-4 justify-end pr-6">
+          <button
+            className="px-4 py-2 rounded-md border border-transparent hover:border-gray-300"
+            onClick={onClose}
+          >
+            {onCloseButtonText}
+          </button>
+          <button
+            className={cn(
+              "px-4 py-2 rounded-md border border-transparent hover:border-gray-300",
+              getProccedButtonTypeColor()
+            )}
+            onClick={proceedAndClose}
+          >
+            {onProceedButtonText}
+          </button>
+        </div>
+      )}
     </dialog>
   );
 };

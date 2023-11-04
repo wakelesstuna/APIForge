@@ -3,8 +3,8 @@ import { BsThreeDots } from "react-icons/bs";
 import NewFolderButton from "./NewFolderButton";
 import { collections } from "../../../wailsjs/go/models";
 import CollectionDeleteButton from "./CollectionDeleteButton";
-import RenameCollectionButton from "./RenameCollectionButton";
 import CollectionRenameButton from "./CollectionRenameButton";
+import CollectionPropertiesButton from "./CollectionPropertiesButton";
 
 interface CollectionFolderMenuProps {
   collection: collections.Collection;
@@ -13,9 +13,6 @@ interface CollectionFolderMenuProps {
 function CollectionFolderMenu({ collection }: CollectionFolderMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleMouseLeave = () => {
-    setIsOpen(false);
-  };
   return (
     <div className="relative flex">
       <button
@@ -27,7 +24,7 @@ function CollectionFolderMenu({ collection }: CollectionFolderMenuProps) {
 
       {isOpen && (
         <div
-          onMouseLeave={handleMouseLeave}
+          onMouseLeave={() => setIsOpen(false)}
           className="absolute top-6 -left-20 cursor-default text-white bg-gray-700 shadow-sm shadow-black"
         >
           <ul className="text-sm text-left">
@@ -42,6 +39,9 @@ function CollectionFolderMenu({ collection }: CollectionFolderMenuProps) {
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
               <CollectionDeleteButton collection={collection} />
+            </li>
+            <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
+              <CollectionPropertiesButton collection={collection} />
             </li>
           </ul>
         </div>
