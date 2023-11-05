@@ -7,7 +7,7 @@ import {request} from '../models';
 
 export function CreateCollection(arg1:string,arg2:string):Promise<backend.AppResponse>;
 
-export function CreateNewFolder(arg1:string,arg2:string):Promise<void>;
+export function CreateNewFolder(arg1:string,arg2:string,arg3:string):Promise<backend.AppResponse>;
 
 export function FetchConfig():Promise<config.Config>;
 

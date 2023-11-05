@@ -36,7 +36,10 @@ function FolderMenuButton({ collection, currentFolderName }: Props) {
               New Request
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
-              <NewFolderButton folderPath="" />
+              <NewFolderButton
+                collectionId={collection.id}
+                parentFolderId={""}
+              />
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
               <RenameCollectionButton

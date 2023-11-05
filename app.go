@@ -54,8 +54,12 @@ func (a *App) RenameCollection(newName string, collectionId string) backend.AppR
 	return response
 }
 
-func (a *App) CreateNewFolder(folderName string, folderPath string) {
-	collections.NewFolder(folderName, folderPath)
+func (a *App) CreateNewFolder(folderName string, parentFolderId string, collectionId string) backend.AppResponse {
+	response := collections.NewFolder(folderName, parentFolderId, collectionId)
+	if response.Status == 201 {
+		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
+	}
+	return response
 }
 
 func (a *App) GetCollection(path string) collections.Collection {
@@ -68,7 +72,7 @@ func (a *App) GetCollections(dirPath string) []collections.Collection {
 
 func (a *App) RemoveCollection(collectionId string) backend.AppResponse {
 	response := collections.DeleteCollection(collectionId)
-	if response.Status == 201 {
+	if response.Status == 204 {
 		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
 	}
 	return response

@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/tidwall/pretty"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-func CreateDirectory(dir string) {
-
-}
+const JsonFileExtenstion string = ".json"
 
 func CreateFolders(path string) {
 	exists := FolderExists(path)
@@ -34,7 +33,7 @@ func FolderExists(folderPath string) bool {
 	return true
 }
 
-func WriteFile(value any, name string, folderPath string) {
+func WriteFile(value any, absolutePath string) {
 	data, err := json.MarshalIndent(value, "", "  ")
 
 	if err != nil {
@@ -42,7 +41,7 @@ func WriteFile(value any, name string, folderPath string) {
 		return
 	}
 
-	file, err := os.Create(folderPath + "/" + name + ".json")
+	file, err := os.OpenFile(absolutePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		fmt.Println("Error creating file:", err)
 		return
@@ -50,12 +49,16 @@ func WriteFile(value any, name string, folderPath string) {
 
 	defer file.Close()
 
-	_, err = file.Write(data)
+	fmt.Printf("Writing to file %s with data %s", absolutePath, data)
+
+	formattedJson := pretty.Pretty(data)
+
+	_, err = file.WriteString(string(formattedJson))
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
 		return
 	}
-	return
+	file.Close()
 }
 
 func PrintFile[T any](input T, filePath string) {
@@ -104,8 +107,4 @@ func OpenFolderChooser(ctx context.Context, options runtime.OpenDialogOptions) s
 	}
 
 	return folder
-}
-
-func FindFolder() {
-
 }

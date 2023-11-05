@@ -116,7 +116,7 @@ export namespace collections {
 	    name: string;
 	    type: string;
 	    items: Item[];
-	    request: Request;
+	    request?: Request;
 	
 	    static createFrom(source: any = {}) {
 	        return new Item(source);

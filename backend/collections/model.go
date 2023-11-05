@@ -21,7 +21,7 @@ type Item struct {
 	Name    string   `json:"name"`
 	Type    ItemType `json:"type"`
 	Items   []Item   `json:"items"`
-	Request Request  `json:"request"`
+	Request *Request `json:"request"`
 }
 
 type Request struct {

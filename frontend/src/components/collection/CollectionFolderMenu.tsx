@@ -25,14 +25,17 @@ function CollectionFolderMenu({ collection }: CollectionFolderMenuProps) {
       {isOpen && (
         <div
           onMouseLeave={() => setIsOpen(false)}
-          className="absolute top-6 -left-20 cursor-default text-white bg-gray-700 shadow-sm shadow-black"
+          className="absolute top-5 -left-20 cursor-default text-white bg-gray-700 shadow-sm shadow-black"
         >
           <ul className="text-sm text-left">
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
               New Request
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
-              <NewFolderButton folderPath="" />
+              <NewFolderButton
+                parentFolderId={collection.id}
+                collectionId={collection.id}
+              />
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
               <CollectionRenameButton collection={collection} />

@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/google/uuid v1.4.0
+	github.com/tidwall/pretty v1.2.1
 	github.com/wailsapp/wails/v2 v2.6.0
 )
 

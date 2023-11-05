@@ -18,7 +18,6 @@ function App() {
       <TopMenu />
       <HttpRequest />
       <CreateCollectionButton />
-      <NewFolderButton folderPath="D:\\projects\\go-api-forge\\collections\\" />
       <div className="h-2 bg-gray-200 w-full"></div>
       <FolderMenu setCurrentRequest={setCurrentRequest} />
       <p className="text-white" onClick={() => setCurrentRequest(undefined)}>

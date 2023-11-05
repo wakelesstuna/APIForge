@@ -59,20 +59,20 @@ const CollectionRoot = ({
       </div>
       {expanded && (
         <div>
-          {collection.items?.map((file) => {
-            if (file.type === "http-request") {
+          {collection.items?.map((item) => {
+            if (item.type === "HTTP_REQUEST") {
               return (
                 <HttpRequest
-                  key={file.name}
-                  request={file}
+                  key={item.name}
+                  request={item}
                   setCurrentRequest={setCurrentRequest}
                 />
               );
-            } else if (file.type === "folder") {
+            } else if (item.type === "FOLDER") {
               return (
                 <FileExplorer
-                  key={file.name.length * 12}
-                  item={file}
+                  key={item.id}
+                  item={item}
                   setCurrentRequest={setCurrentRequest}
                 />
               );
@@ -91,7 +91,7 @@ interface FileExplorerProps {
 
 const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
   const [expanded, setExpanded] = useState(false);
-  if (item.type === "folder") {
+  if (item.type === "FOLDER") {
     return (
       <div key={item.name} className={cn(`${"pl-4"}`)}>
         <div className={cn("hover:bg-gray-300/10 text-gray-300 flex")}>
@@ -108,20 +108,20 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
         </div>
         {expanded && (
           <div>
-            {item.items?.map((file) => {
-              if (file.type === "http-request") {
+            {item.items?.map((subItem) => {
+              if (subItem.type === "HTTP_REQUEST") {
                 return (
                   <HttpRequest
-                    key={file.name}
-                    request={file}
+                    key={subItem.id}
+                    request={subItem}
                     setCurrentRequest={setCurrentRequest}
                   />
                 );
-              } else if (file.type === "folder") {
+              } else if (subItem.type === "FOLDER") {
                 return (
                   <FileExplorer
-                    key={file.name.length * 12}
-                    item={file}
+                    key={subItem.id}
+                    item={subItem}
                     setCurrentRequest={setCurrentRequest}
                   />
                 );

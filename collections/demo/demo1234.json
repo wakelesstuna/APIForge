@@ -1,0 +1,29 @@
+{
+  "id": "b447d192-65ca-4b59-89a5-360ad872544a",
+  "name": "demo1234",
+  "collectionDir": "D:\\projects\\go-api-forge\\collections\\demo",
+  "type": "COLLECTION",
+  "items": [
+    {
+      "id": "f7b2e756-1b52-4f68-a20d-ef78e409d6e2",
+      "name": "test folder",
+      "type": "FOLDER",
+      "items": null,
+      "request": null
+    },
+    {
+      "id": "4b51bb4d-3bb7-481c-8722-7eb23519ec1c",
+      "name": "more folders",
+      "type": "FOLDER",
+      "items": null,
+      "request": null
+    },
+    {
+      "id": "eeb6f04e-4094-4258-b905-3f0febc05539",
+      "name": "working folders",
+      "type": "FOLDER",
+      "items": null,
+      "request": null
+    }
+  ]
+}

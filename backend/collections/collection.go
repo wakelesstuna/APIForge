@@ -18,7 +18,7 @@ func GetCollections() []Collection {
 	cfg := config.FetchConfig()
 
 	for _, collection := range cfg.Collections {
-		dir1 := filepath.Join(collection.DirPath, collection.Name+".json")
+		dir1 := filepath.Join(collection.DirPath, collection.Name+utils.JsonFileExtenstion)
 		fmt.Println(dir1)
 		collections = append(collections, GetCollection(dir1))
 	}
@@ -43,7 +43,7 @@ func CreateCollection(collectionFolderName string, collectionlocation string) ba
 	collection.CollectionDir = collectionlocation
 	collection.Type = COLLECTION
 
-	utils.WriteFile(collection, collectionFolderName, collectionlocation)
+	saveCollection(collection)
 	config.AddCollection(collection.Id, collection.Name, collection.CollectionDir)
 	resp.Status = 200
 	return resp
@@ -54,12 +54,9 @@ func RenameCollection(newName string, collectionId string) backend.AppResponse {
 	cfg := config.FetchConfig()
 
 	collection := findCollectionById(cfg.Collections, collectionId)
-	fmt.Println(collection)
 
-	oldAbsolutePath := filepath.Join(collection.DirPath, collection.Name+".json")
-	newAbsolutePath := filepath.Join(collection.DirPath, newName+".json")
-	fmt.Println("oldPath " + oldAbsolutePath)
-	fmt.Println("newPath " + newAbsolutePath)
+	oldAbsolutePath := filepath.Join(collection.DirPath, collection.Name+utils.JsonFileExtenstion)
+	newAbsolutePath := filepath.Join(collection.DirPath, newName+utils.JsonFileExtenstion)
 
 	if err := os.Rename(oldAbsolutePath, newAbsolutePath); err != nil {
 		resp.Status = 500
@@ -68,25 +65,31 @@ func RenameCollection(newName string, collectionId string) backend.AppResponse {
 		return resp
 	}
 
-	collection.Name = newName
-	utils.WriteFile(collection, collection.Name, collection.DirPath)
+	coll := GetCollection(newAbsolutePath)
+	coll.Name = newName
+	saveCollection(coll)
 
 	config.RenameCollection(newName, collectionId)
 	resp.Status = 200
 	return resp
 }
 
-func NewFolder(folderName string, folderPath string) {
-	newFolder := filepath.Join(folderPath, folderName)
-	fmt.Println(newFolder)
+func NewFolder(folderName string, parentFolderId string, collectionId string) backend.AppResponse {
+	var resp backend.AppResponse
 
-	if utils.FolderExists(newFolder) {
-		panic("collection: " + newFolder + " already exists")
+	collections := GetCollections()
+
+	for i, collection := range collections {
+		if collection.Id == collectionId {
+			collections[i].Items = append(collection.Items, Item{Id: uuid.NewString(), Name: folderName, Type: FOLDER, Request: nil})
+			saveCollection(collections[i])
+			resp.Status = 201
+			return resp
+		}
 	}
 
-	if err := os.Mkdir(newFolder, 0755); err != nil {
-		panic(err)
-	}
+	resp.Status = 404
+	return resp
 }
 
 func DeleteCollection(collectionId string) backend.AppResponse {
@@ -95,7 +98,7 @@ func DeleteCollection(collectionId string) backend.AppResponse {
 
 	for _, collection := range cfg.Collections {
 		if collection.Id == collectionId {
-			err := os.Remove(filepath.Join(collection.DirPath, collection.Name+".json"))
+			err := os.Remove(filepath.Join(collection.DirPath, collection.Name+utils.JsonFileExtenstion))
 			if err != nil {
 				resp.Status = 500
 				resp.Error.Status = 500
@@ -103,7 +106,7 @@ func DeleteCollection(collectionId string) backend.AppResponse {
 				return resp
 			}
 			config.DeleteCollection(collection.Id)
-			resp.Status = 201
+			resp.Status = 204
 			return resp
 		}
 	}
@@ -115,11 +118,13 @@ func findCollectionById(collections []config.Collection, id string) config.Colle
 	fmt.Println("looking for collection with id: " + id)
 	for _, collection := range collections {
 		if collection.Id == id {
-			fmt.Println("found collection with id: " + id)
 			return collection
 		}
 	}
-	fmt.Println("Did not find collection")
 	return config.Collection{}
 
+}
+
+func saveCollection(collection Collection) {
+	utils.WriteFile(collection, filepath.Join(collection.CollectionDir, collection.Name+utils.JsonFileExtenstion))
 }
