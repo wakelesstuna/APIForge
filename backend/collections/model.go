@@ -39,3 +39,11 @@ type Body struct {
 	MultipartForm  string `json:"multipartForm"`
 	FormUrlEncoded string `json:"formUrlEncoded"`
 }
+
+type CreateNewHttpRequest struct {
+	CollectionId   string `json:"collectionId"`
+	ParentFolderId string `json:"parentFolderId"`
+	Name           string `json:"name"`
+	Method         string `json:"method"`
+	Url            string `json:"url"`
+}

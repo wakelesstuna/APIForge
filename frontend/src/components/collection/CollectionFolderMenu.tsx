@@ -1,10 +1,11 @@
-import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import NewFolderButton from "./NewFolderButton";
-import { collections } from "../../../wailsjs/go/models";
 import CollectionDeleteButton from "./CollectionDeleteButton";
-import CollectionRenameButton from "./CollectionRenameButton";
 import CollectionPropertiesButton from "./CollectionPropertiesButton";
+import CollectionRenameButton from "./CollectionRenameButton";
+import NewFolderButton from "./NewFolderButton";
+import NewRequestButton from "./NewRequestButton";
+import { collections } from "../../../wailsjs/go/models";
+import { useState } from "react";
 
 interface CollectionFolderMenuProps {
   collection: collections.Collection;
@@ -29,7 +30,10 @@ function CollectionFolderMenu({ collection }: CollectionFolderMenuProps) {
         >
           <ul className="text-sm text-left">
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
-              New Request
+              <NewRequestButton
+                parentFolderId={collection.id}
+                collectionId={collection.id}
+              />
             </li>
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
               <NewFolderButton

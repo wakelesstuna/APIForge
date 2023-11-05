@@ -10,6 +10,10 @@ export function CreateNewFolder(arg1, arg2, arg3) {
   return window['go']['main']['App']['CreateNewFolder'](arg1, arg2, arg3);
 }
 
+export function CreateNewHttpRequest(arg1) {
+  return window['go']['main']['App']['CreateNewHttpRequest'](arg1);
+}
+
 export function FetchConfig() {
   return window['go']['main']['App']['FetchConfig']();
 }

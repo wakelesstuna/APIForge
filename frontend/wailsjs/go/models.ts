@@ -187,6 +187,26 @@ export namespace collections {
 		    return a;
 		}
 	}
+	export class CreateNewHttpRequest {
+	    collectionId: string;
+	    parentFolderId: string;
+	    name: string;
+	    method: string;
+	    url: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new CreateNewHttpRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.collectionId = source["collectionId"];
+	        this.parentFolderId = source["parentFolderId"];
+	        this.name = source["name"];
+	        this.method = source["method"];
+	        this.url = source["url"];
+	    }
+	}
 	
 
 }

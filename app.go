@@ -62,6 +62,14 @@ func (a *App) CreateNewFolder(folderName string, parentFolderId string, collecti
 	return response
 }
 
+func (a *App) CreateNewHttpRequest(request collections.CreateNewHttpRequest) backend.AppResponse {
+	response := collections.NewRequest(request)
+	if response.Status == 201 {
+		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
+	}
+	return response
+}
+
 func (a *App) GetCollection(path string) collections.Collection {
 	return collections.GetCollection(path)
 }

@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { collections } from "../../../wailsjs/go/models";
-import { cn } from "../../utils/tailwind.utils";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
-import useCollections from "../../hooks/useCollections";
-import { getColorOfMethod } from "../../utils/http.utils";
-import FolderMenuButton from "../collection/FolderMenuButton";
-import useConfig from "../../hooks/useConfig";
-import RequestMenuButton from "../collection/RequestMenuButton";
+
 import CollectionFolderMenu from "../collection/CollectionFolderMenu";
+import FolderMenuButton from "../collection/FolderMenuButton";
+import RequestMenuButton from "../collection/RequestMenuButton";
+import { cn } from "../../utils/tailwind.utils";
+import { collections } from "../../../wailsjs/go/models";
+import { getColorOfMethod } from "../../utils/http.utils";
+import useCollections from "../../hooks/useCollections";
 
 interface FolderMenuProps {
   setCurrentRequest: Dispatch<SetStateAction<collections.Request | undefined>>;
@@ -64,7 +64,7 @@ const CollectionRoot = ({
               return (
                 <HttpRequest
                   key={item.name}
-                  request={item}
+                  item={item}
                   setCurrentRequest={setCurrentRequest}
                 />
               );
@@ -113,7 +113,7 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
                 return (
                   <HttpRequest
                     key={subItem.id}
-                    request={subItem}
+                    item={subItem}
                     setCurrentRequest={setCurrentRequest}
                   />
                 );
@@ -135,35 +135,39 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
   return (
     <HttpRequest
       key={item.id}
-      request={item}
+      item={item}
       setCurrentRequest={setCurrentRequest}
     />
   );
 };
 
 interface HttpRequestProps {
-  request: collections.Item;
+  item: collections.Item;
   setCurrentRequest: Dispatch<SetStateAction<collections.Request | undefined>>;
 }
-const HttpRequest = ({ request, setCurrentRequest }: HttpRequestProps) => {
+const HttpRequest = ({ item, setCurrentRequest }: HttpRequestProps) => {
+  if (item.request === undefined) {
+    return <></>;
+  }
+
   return (
     <div
-      key={request.name}
+      key={item.name}
       className="pl-8 cursor-pointer hover:bg-gray-300/10 text-gray-300 flex"
     >
       <p
         className="flex-1 peer"
-        onClick={() => setCurrentRequest(request.request)}
+        onClick={() => setCurrentRequest(item.request)}
       >
         <span
           className={cn(
             "font-semibold text-xs pr-2",
-            getColorOfMethod(request.request.method)
+            getColorOfMethod(item.request.method)
           )}
         >
-          {request.request.method}
+          {item.request.method}
         </span>
-        {request.name}
+        {item.name}
       </p>
       <div className="opacity-0 peer-hover:opacity-100 hover:opacity-100 flex justify-end items-center">
         <RequestMenuButton />

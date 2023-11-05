@@ -92,6 +92,39 @@ func NewFolder(folderName string, parentFolderId string, collectionId string) ba
 	return resp
 }
 
+func NewRequest(request CreateNewHttpRequest) backend.AppResponse {
+	var resp backend.AppResponse
+
+	collections := GetCollections()
+
+	item := Item{
+		Id:   uuid.NewString(),
+		Name: request.Name,
+		Type: HTTP_REQUEST,
+		Request: &Request{
+			Url:    request.Url,
+			Method: request.Method,
+		},
+	}
+
+	for i, collection := range collections {
+		if collection.Id == request.CollectionId {
+			if request.ParentFolderId == request.CollectionId {
+				collections[i].Items = append(collection.Items, item)
+			} else {
+				if foundItem := findItemById(request.ParentFolderId, collection.Items); foundItem != nil {
+					foundItem.Items = append(foundItem.Items, item)
+				}
+			}
+			saveCollection(collections[i])
+			resp.Status = 201
+			return resp
+		}
+	}
+	resp.Status = 404
+	return resp
+}
+
 func DeleteCollection(collectionId string) backend.AppResponse {
 	var resp backend.AppResponse
 	cfg := config.FetchConfig()
@@ -115,7 +148,6 @@ func DeleteCollection(collectionId string) backend.AppResponse {
 }
 
 func findCollectionById(collections []config.Collection, id string) config.Collection {
-	fmt.Println("looking for collection with id: " + id)
 	for _, collection := range collections {
 		if collection.Id == id {
 			return collection
@@ -123,6 +155,19 @@ func findCollectionById(collections []config.Collection, id string) config.Colle
 	}
 	return config.Collection{}
 
+}
+
+func findItemById(id string, items []Item) *Item {
+	for i := range items {
+		if items[i].Id == id {
+			return &items[i]
+		}
+
+		if foundItem := findItemById(id, items[i].Items); foundItem != nil {
+			return foundItem
+		}
+	}
+	return nil
 }
 
 func saveCollection(collection Collection) {
