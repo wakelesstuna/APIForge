@@ -121,7 +121,50 @@ func NewRequest(request CreateNewHttpRequest) backend.AppResponse {
 			return resp
 		}
 	}
+
 	resp.Status = 404
+	return resp
+}
+
+func DeleteItem(collectionId string, itemId string) backend.AppResponse {
+	var resp backend.AppResponse
+
+	colletions := GetCollections()
+
+	collectionIndex := -1
+	indexToDelete := -1
+
+	for i, collection := range colletions {
+		if collection.Id == collectionId {
+			collectionIndex = i
+			break
+		}
+	}
+
+	if collectionIndex == -1 {
+		resp.Status = 404
+		resp.Error.Message = "Could not find collection with id: " + collectionId
+		resp.Error.Status = 404
+		return resp
+	}
+
+	for i, item := range colletions[collectionIndex].Items {
+		if item.Id == itemId {
+			indexToDelete = i
+			colletions[collectionIndex].Items = append(colletions[collectionIndex].Items[:indexToDelete], colletions[collectionIndex].Items[indexToDelete+1:]...)
+			break
+		}
+	}
+
+	if indexToDelete == -1 {
+		resp.Status = 404
+		resp.Error.Message = "Could not find item with id: " + itemId
+		resp.Error.Status = 404
+		return resp
+	}
+
+	saveCollection(colletions[collectionIndex])
+	resp.Status = 204
 	return resp
 }
 

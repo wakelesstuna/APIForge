@@ -1,19 +1,15 @@
+import React, { useState } from "react";
+
 import { BsThreeDots } from "react-icons/bs";
 import RemoveItem from "./RemoveItem";
 import { collections } from "../../../wailsjs/go/models";
-import { useState } from "react";
 
-interface Props {
+interface RequestMenuProps {
   collection: collections.Collection;
   item: collections.Item;
 }
-
-function FolderMenuButton({ collection, item }: Props) {
+function RequestMenu({ collection, item }: RequestMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleMouseLeave = () => {
-    setIsOpen(false);
-  };
 
   return (
     <div className="relative flex">
@@ -26,12 +22,12 @@ function FolderMenuButton({ collection, item }: Props) {
 
       {isOpen && (
         <div
-          onMouseLeave={handleMouseLeave}
-          className="absolute top-6 -left-20 cursor-default text-white bg-gray-700 shadow-sm shadow-black"
+          onMouseLeave={() => setIsOpen(false)}
+          className="absolute top-5 -left-20 cursor-default text-white bg-gray-700 shadow-sm shadow-black"
         >
           <ul className="text-sm text-left">
             <li className="hover:bg-blue-500 px-2 py-[1px] my-[1px]">
-              <RemoveItem collection={collection} item={item} />
+              <RemoveItem item={item} collection={collection} />
             </li>
           </ul>
         </div>
@@ -40,4 +36,4 @@ function FolderMenuButton({ collection, item }: Props) {
   );
 }
 
-export default FolderMenuButton;
+export default RequestMenu;

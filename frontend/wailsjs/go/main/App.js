@@ -14,6 +14,14 @@ export function CreateNewHttpRequest(arg1) {
   return window['go']['main']['App']['CreateNewHttpRequest'](arg1);
 }
 
+export function DeleteCollection(arg1) {
+  return window['go']['main']['App']['DeleteCollection'](arg1);
+}
+
+export function DeleteItem(arg1, arg2) {
+  return window['go']['main']['App']['DeleteItem'](arg1, arg2);
+}
+
 export function FetchConfig() {
   return window['go']['main']['App']['FetchConfig']();
 }
@@ -24,10 +32,6 @@ export function GetCollection(arg1) {
 
 export function GetCollections(arg1) {
   return window['go']['main']['App']['GetCollections'](arg1);
-}
-
-export function RemoveCollection(arg1) {
-  return window['go']['main']['App']['RemoveCollection'](arg1);
 }
 
 export function RenameCollection(arg1, arg2) {

@@ -12,39 +12,6 @@
       "request": null
     },
     {
-      "id": "4b51bb4d-3bb7-481c-8722-7eb23519ec1c",
-      "name": "more folders",
-      "type": "FOLDER",
-      "items": null,
-      "request": null
-    },
-    {
-      "id": "eeb6f04e-4094-4258-b905-3f0febc05539",
-      "name": "working folders",
-      "type": "FOLDER",
-      "items": null,
-      "request": null
-    },
-    {
-      "id": "fbdf7774-250d-4ec3-bec3-412cfea3bc35",
-      "name": "test",
-      "type": "HTTP_REQUEST",
-      "items": null,
-      "request": {
-        "id": "http://test.se",
-        "method": "GET",
-        "headers": null,
-        "params": null,
-        "body": {
-          "mode": "",
-          "json": "",
-          "text": "",
-          "multipartForm": "",
-          "formUrlEncoded": ""
-        }
-      }
-    },
-    {
       "id": "2b11e548-ee3c-4193-9089-e4d9e80b3609",
       "name": "Do it!",
       "type": "HTTP_REQUEST",

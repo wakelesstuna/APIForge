@@ -3,7 +3,7 @@ import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 
 import CollectionFolderMenu from "../collection/CollectionFolderMenu";
 import FolderMenuButton from "../collection/FolderMenuButton";
-import RequestMenuButton from "../collection/RequestMenuButton";
+import RequestMenu from "../collection/RequestMenu";
 import { cn } from "../../utils/tailwind.utils";
 import { collections } from "../../../wailsjs/go/models";
 import { getColorOfMethod } from "../../utils/http.utils";
@@ -64,6 +64,7 @@ const CollectionRoot = ({
               return (
                 <HttpRequest
                   key={item.name}
+                  collection={collection}
                   item={item}
                   setCurrentRequest={setCurrentRequest}
                 />
@@ -72,6 +73,7 @@ const CollectionRoot = ({
               return (
                 <FileExplorer
                   key={item.id}
+                  collection={collection}
                   item={item}
                   setCurrentRequest={setCurrentRequest}
                 />
@@ -85,11 +87,16 @@ const CollectionRoot = ({
 };
 
 interface FileExplorerProps {
+  collection: collections.Collection;
   item: collections.Item;
   setCurrentRequest: Dispatch<SetStateAction<collections.Request | undefined>>;
 }
 
-const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
+const FileExplorer = ({
+  collection,
+  item,
+  setCurrentRequest,
+}: FileExplorerProps) => {
   const [expanded, setExpanded] = useState(false);
   if (item.type === "FOLDER") {
     return (
@@ -103,7 +110,7 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
             {item.name}
           </span>
           <div className="opacity-0 hover:opacity-100 flex justify-end flex-1 items-center">
-            <FolderMenuButton collection={item} currentFolderName={item.name} />
+            <FolderMenuButton collection={collection} item={item} />
           </div>
         </div>
         {expanded && (
@@ -113,6 +120,7 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
                 return (
                   <HttpRequest
                     key={subItem.id}
+                    collection={collection}
                     item={subItem}
                     setCurrentRequest={setCurrentRequest}
                   />
@@ -121,6 +129,7 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
                 return (
                   <FileExplorer
                     key={subItem.id}
+                    collection={collection}
                     item={subItem}
                     setCurrentRequest={setCurrentRequest}
                   />
@@ -135,6 +144,7 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
   return (
     <HttpRequest
       key={item.id}
+      collection={collection}
       item={item}
       setCurrentRequest={setCurrentRequest}
     />
@@ -142,10 +152,15 @@ const FileExplorer = ({ item, setCurrentRequest }: FileExplorerProps) => {
 };
 
 interface HttpRequestProps {
+  collection: collections.Collection;
   item: collections.Item;
   setCurrentRequest: Dispatch<SetStateAction<collections.Request | undefined>>;
 }
-const HttpRequest = ({ item, setCurrentRequest }: HttpRequestProps) => {
+const HttpRequest = ({
+  collection,
+  item,
+  setCurrentRequest,
+}: HttpRequestProps) => {
   if (item.request === undefined) {
     return <></>;
   }
@@ -170,7 +185,7 @@ const HttpRequest = ({ item, setCurrentRequest }: HttpRequestProps) => {
         {item.name}
       </p>
       <div className="opacity-0 peer-hover:opacity-100 hover:opacity-100 flex justify-end items-center">
-        <RequestMenuButton />
+        <RequestMenu item={item} collection={collection} />
       </div>
     </div>
   );

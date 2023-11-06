@@ -40,6 +40,14 @@ func (a *App) SelectFolder() string {
 	return utils.OpenFolderChooser(a.ctx, options)
 }
 
+func (a *App) GetCollection(path string) collections.Collection {
+	return collections.GetCollection(path)
+}
+
+func (a *App) GetCollections(dirPath string) []collections.Collection {
+	return collections.GetCollections()
+}
+
 func (a *App) CreateCollection(name string, dirPath string) backend.AppResponse {
 	response := collections.CreateCollection(name, dirPath)
 	runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
@@ -49,6 +57,14 @@ func (a *App) CreateCollection(name string, dirPath string) backend.AppResponse 
 func (a *App) RenameCollection(newName string, collectionId string) backend.AppResponse {
 	response := collections.RenameCollection(newName, collectionId)
 	if response.Status == 200 {
+		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
+	}
+	return response
+}
+
+func (a *App) DeleteCollection(collectionId string) backend.AppResponse {
+	response := collections.DeleteCollection(collectionId)
+	if response.Status == 204 {
 		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
 	}
 	return response
@@ -70,18 +86,10 @@ func (a *App) CreateNewHttpRequest(request collections.CreateNewHttpRequest) bac
 	return response
 }
 
-func (a *App) GetCollection(path string) collections.Collection {
-	return collections.GetCollection(path)
-}
-
-func (a *App) GetCollections(dirPath string) []collections.Collection {
-	return collections.GetCollections()
-}
-
-func (a *App) RemoveCollection(collectionId string) backend.AppResponse {
-	response := collections.DeleteCollection(collectionId)
-	if response.Status == 204 {
+func (a *App) DeleteItem(collectionId string, itemId string) backend.AppResponse {
+	resp := collections.DeleteItem(collectionId, itemId)
+	if resp.Status == 204 {
 		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
 	}
-	return response
+	return resp
 }

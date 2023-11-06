@@ -11,13 +11,15 @@ export function CreateNewFolder(arg1:string,arg2:string,arg3:string):Promise<bac
 
 export function CreateNewHttpRequest(arg1:collections.CreateNewHttpRequest):Promise<backend.AppResponse>;
 
+export function DeleteCollection(arg1:string):Promise<backend.AppResponse>;
+
+export function DeleteItem(arg1:string,arg2:string):Promise<backend.AppResponse>;
+
 export function FetchConfig():Promise<config.Config>;
 
 export function GetCollection(arg1:string):Promise<collections.Collection>;
 
 export function GetCollections(arg1:string):Promise<Array<collections.Collection>>;
-
-export function RemoveCollection(arg1:string):Promise<backend.AppResponse>;
 
 export function RenameCollection(arg1:string,arg2:string):Promise<backend.AppResponse>;
 
