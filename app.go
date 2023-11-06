@@ -86,6 +86,14 @@ func (a *App) CreateNewHttpRequest(request collections.CreateNewHttpRequest) bac
 	return response
 }
 
+func (a *App) CreateItem(request collections.CreateItemRequest) backend.AppResponse {
+	resp := collections.CreateItem(request)
+	if resp.Status == 201 {
+		runtime.EventsEmit(a.ctx, "collections", collections.GetCollections())
+	}
+	return resp
+}
+
 func (a *App) DeleteItem(collectionId string, itemId string) backend.AppResponse {
 	resp := collections.DeleteItem(collectionId, itemId)
 	if resp.Status == 204 {

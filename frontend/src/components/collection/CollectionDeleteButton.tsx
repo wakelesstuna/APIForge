@@ -1,6 +1,6 @@
-import { collections } from "../../../wailsjs/go/models";
-import { RemoveCollection } from "../../../wailsjs/go/main/App";
+import { DeleteCollection } from "../../../wailsjs/go/main/App";
 import DialogModal from "../modal/Modal";
+import { collections } from "../../../wailsjs/go/models";
 import { useState } from "react";
 
 interface CollectionDeleteButtonProps {
@@ -11,7 +11,7 @@ function CollectionDeleteButton({ collection }: CollectionDeleteButtonProps) {
   const [isOpened, setIsOpened] = useState(false);
 
   const remove = async () => {
-    const resp = await RemoveCollection(collection.id);
+    const resp = await DeleteCollection(collection.id);
     if (resp.status != 201) {
       alert(resp.error.messsage);
     }

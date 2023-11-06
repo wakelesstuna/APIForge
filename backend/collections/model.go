@@ -47,3 +47,12 @@ type CreateNewHttpRequest struct {
 	Method         string `json:"method"`
 	Url            string `json:"url"`
 }
+
+type CreateItemRequest struct {
+	CollectionId   string   `json:"collectionId"`
+	ParentFolderId string   `json:"parentFolderId"`
+	Name           string   `json:"name"`
+	Type           ItemType `json:"type"`
+	Method         string   `json:"method"`
+	Url            string   `json:"url"`
+}

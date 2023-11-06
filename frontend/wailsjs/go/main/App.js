@@ -6,6 +6,10 @@ export function CreateCollection(arg1, arg2) {
   return window['go']['main']['App']['CreateCollection'](arg1, arg2);
 }
 
+export function CreateItem(arg1) {
+  return window['go']['main']['App']['CreateItem'](arg1);
+}
+
 export function CreateNewFolder(arg1, arg2, arg3) {
   return window['go']['main']['App']['CreateNewFolder'](arg1, arg2, arg3);
 }

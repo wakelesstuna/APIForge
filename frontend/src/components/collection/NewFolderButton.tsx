@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { CreateItem } from "../../../wailsjs/go/main/App";
 import DialogModal from "../modal/Modal";
 import InputField from "../ui/InputField";
-import { CreateNewFolder } from "../../../wailsjs/go/main/App";
+import { collections } from "../../../wailsjs/go/models";
+import { useState } from "react";
 
 interface NewFolderButtonProps {
   collectionId: string;
@@ -16,8 +17,15 @@ function NewFolderButton({
   const [name, setName] = useState("");
 
   const onProceed = async () => {
-    console.log("Creating collection named: " + name);
-    let resp = await CreateNewFolder(name, parentFolderId, collectionId);
+    let request = new collections.CreateItemRequest();
+    request.collectionId = collectionId;
+    request.parentFolderId = parentFolderId;
+    request.name = name;
+    request.type = "FOLDER";
+    let resp = await CreateItem(request);
+    if (resp.status != 201) {
+      alert(resp);
+    }
     setName("");
   };
 

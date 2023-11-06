@@ -216,3 +216,50 @@ func findItemById(id string, items []Item) *Item {
 func saveCollection(collection Collection) {
 	utils.WriteFile(collection, filepath.Join(collection.CollectionDir, collection.Name+utils.JsonFileExtenstion))
 }
+
+func CreateItem(request CreateItemRequest) backend.AppResponse {
+	var resp backend.AppResponse
+	var item Item
+
+	collections := GetCollections()
+
+	if request.Type == FOLDER {
+		// validera input
+		item = Item{
+			Id:   uuid.NewString(),
+			Name: request.Name,
+			Type: FOLDER,
+		}
+	}
+
+	if request.Type == HTTP_REQUEST {
+		// validera input
+		item = Item{
+			Id:   uuid.NewString(),
+			Name: request.Name,
+			Type: HTTP_REQUEST,
+			Request: &Request{
+				Url:    request.Url,
+				Method: request.Method,
+			},
+		}
+	}
+
+	for i, collection := range collections {
+		if collection.Id == request.CollectionId {
+			if request.ParentFolderId == request.CollectionId {
+				collections[i].Items = append(collection.Items, item)
+			} else {
+				if foundItem := findItemById(request.ParentFolderId, collection.Items); foundItem != nil {
+					foundItem.Items = append(foundItem.Items, item)
+				}
+			}
+			saveCollection(collections[i])
+			resp.Status = 201
+			return resp
+		}
+	}
+
+	resp.Status = 404
+	return resp
+}
